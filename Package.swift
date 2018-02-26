@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "app",
     products: [
-        .library(name: "app", targets: ["app"])
+        .executable(name: "app", targets: ["app"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -17,10 +17,16 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "app",
-            dependencies: []),
+            dependencies: ["core"]
+        ),
+        .target(
+            name: "core",
+            dependencies: []
+        ),
         .testTarget(
-            name: "BookTests",
-            path: "Tests/BookTests"
+            name: "FunctionsTests",
+            dependencies: ["core"],
+            path: "Tests/FunctionsTests"
         ),
     ]
 )

@@ -1,7 +1,7 @@
 import XCTest
-@testable import BookTests
+@testable import FunctionsTests
 
 print("starting tests...")
 XCTMain([
-    testCase(BookTests.allTests)
+    testCase(FunctionsTests.allTests)
 ])
