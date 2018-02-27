@@ -1,31 +1,27 @@
 import Foundation
 import core
 
-let successResponse: SuccessCallback = { data in
-    let json = try? JSONSerialization.jsonObject(with: data!, options:[])
-    if let rootObject = json as? [String: Any],
-       let docs =  rootObject["docs"] as! [[ String: Any? ]]? {
-           docs.forEach({ doc in
-               if let title = doc["title"] as? String {
-                   print("title: \(title)")
-               }
-           })
-    }
-}
+print("using the book service to Search...")
 
-let failResponse: FailCallback = { error in
-    print(error)
-}
+let myFavorites = [
+    "treeleaf00tolk",
+    "lordofrings56tolk",
+    "silmarillion00tolk"
+]
+let bookService = BookService()
+let bookRepository = BookRepository()
 
-print("making a single request...")
-//requestService(
-//    url: "http://openlibrary.org/search.json?author=tolkien", 
-//    success:successResponse, 
-//    fail: failResponse
-//)
-
-stubRequestService(
-    url: "http://openlibrary.org/search.json?author=tolkien", 
-    success:successResponse, 
-    fail: failResponse
-)
+bookService.searchBy(author: "tolkien", success: { data in
+    // saving the books:
+    data.forEach({ book in
+        let isFavorite = myFavorites.filter({ $0 == book!.id })
+        if !isFavorite.isEmpty {
+            bookRepository.markAsFavorite(book: book!)
+        }
+    })
+    // print the favorites:
+    let favorites = bookRepository.getFavorites()
+    favorites.forEach({ favorite in
+        print("my favorites --> ", favorite)
+    })
+})

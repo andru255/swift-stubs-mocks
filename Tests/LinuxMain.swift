@@ -1,7 +1,9 @@
 import XCTest
+import Quick
+
 @testable import FunctionsTests
 
 print("starting tests...")
-XCTMain([
-    testCase(FunctionsTests.allTests)
+Quick.QCKMain([
+    FunctionsTests.self
 ])

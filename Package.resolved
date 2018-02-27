@@ -1,0 +1,43 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "MockSix",
+        "repositoryURL": "https://github.com/lvsti/MockSix",
+        "state": {
+          "branch": null,
+          "revision": "648279ca90a6a8f1e3917ed73ada1be76f3ab784",
+          "version": "0.1.7"
+        }
+      },
+      {
+        "package": "Nimble",
+        "repositoryURL": "https://github.com/Quick/Nimble.git",
+        "state": {
+          "branch": null,
+          "revision": "22800b0954c89344bb8c87f8ab93378076716fb7",
+          "version": "7.0.3"
+        }
+      },
+      {
+        "package": "NimbleMockSix",
+        "repositoryURL": "https://github.com/lvsti/NimbleMockSix",
+        "state": {
+          "branch": "master",
+          "revision": "673113b7d7658d479a84791a9c41075521d26a77",
+          "version": null
+        }
+      },
+      {
+        "package": "Quick",
+        "repositoryURL": "https://github.com/Quick/Quick",
+        "state": {
+          "branch": null,
+          "revision": "0ff81f2c665b4381f526bd656f8708dd52a9ea2f",
+          "version": "1.2.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
