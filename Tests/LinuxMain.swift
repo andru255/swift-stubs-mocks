@@ -1,9 +1,11 @@
 import XCTest
 import Quick
 
-@testable import FunctionsTests
+@testable import NetworkAdapterTests
+@testable import BooksTests
 
 print("starting tests...")
 Quick.QCKMain([
-    FunctionsTests.self
+    NetworkAdapterTests.self,
+    BooksTests.self
 ])

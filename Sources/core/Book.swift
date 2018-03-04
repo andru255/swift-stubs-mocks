@@ -1,33 +1,28 @@
 import Foundation
 
 // Protocols
-protocol BookRepositoryProtocol {
-    func markAsFavorite(book: BookEntity)
-    func getFavorites() -> [BookEntity]
+protocol PocketProtocol {
+    func readItLater(book: BookModel)
+    func getAllToRead() -> [BookModel]
 }
-protocol BookServiceProtocol {
-    func searchBy(author: String, success:@escaping((_ data:[BookEntity?]) -> Void ))
+protocol BookFinderProtocol {
+    func searchBy(author: String, success:((_ data:[BookModel?]) -> Void)?, fail: FailCallback)
 }
-protocol BookEntityProtocol {
-    var id: String {get set}
-    var title: String {get set}
-    var author: [String] {get set}
-}
-
-// Entities
-public struct BookEntity: BookEntityProtocol {
+// Models
+public struct BookModel {
     public var id: String
     public var title: String
     public var author: [ String ]
 }
 
-// Services
-public class BookService: BookServiceProtocol {
-    public init(){
-
+// BookFinder
+public class BookFinder: BookFinderProtocol {
+    private var adapter: NetworkAdapter
+    public init(adapter: NetworkAdapter){
+        self.adapter = adapter
     }
-    public func searchBy(author: String, success:@escaping((_ data:[BookEntity?]) -> Void )) {
-        var result: [BookEntity?] = []
+    public func searchBy(author: String, success:((_ data:[BookModel?]) -> Void )? = nil, fail: FailCallback = nil) {
+        var result: [BookModel?] = []
         let successResponse: SuccessCallback = { data in
             let json = try? JSONSerialization.jsonObject(with: data!, options:[])
             if let rootObject = json as? [String: Any],
@@ -36,19 +31,25 @@ public class BookService: BookServiceProtocol {
                        if let title = doc["title"] as? String,
                           let author = doc["author_name"] as? [ String ],
                           let id = doc["lending_identifier_s"] as? String {
-                              let book = BookEntity(id: id, title: title, author: author)
+                              let book = BookModel(id: id, title: title, author: author)
                               result.append(book)
                        }
                    })
-                   success(result)
-            }
+                   if let successCallback = success {
+                        successCallback(result)
+                   }
+            } else {
+                fatalError("Formato del servicio no valido")
+            }  
         }
 
         let failResponse: FailCallback = { error in
-            print(error)
+            if let failCallback = fail {
+                failCallback(error)
+            }
         }
 
-        Functions.requestService(
+        self.adapter.request(
             url: "http://openlibrary.org/search.json?author=\(author)", 
             success: successResponse, 
             fail: failResponse
@@ -57,17 +58,17 @@ public class BookService: BookServiceProtocol {
 }
 
 // Repositories
-public class BookRepository: BookRepositoryProtocol {
-    private var savedBooks: [BookEntity] = []
+public class Pocket: PocketProtocol {
+    private var savedBooks: [BookModel] = []
     public init() {
 
     }
-    public func markAsFavorite(book: BookEntity) {
+    public func readItLater(book: BookModel) {
         if !savedBooks.contains(where: { $0.id == book.id }) {
             savedBooks.append(book)
         }
     }
-    public func getFavorites() -> [BookEntity] {
+    public func getAllToRead() -> [BookModel] {
         return savedBooks
     }
 }

@@ -2,4 +2,5 @@
 
 docker run --privileged \
            --rm -e DEV_UID=$(id -u) -e DEV_GID=$(id -g) \
-           -v $(pwd):/usr/local/app andru255/docker-swift $*
+           -v /etc/ssl/certs:/etc/ssl/certs:ro \
+           -v $(pwd):/usr/local/app andru255/docker-swift:4.0 $*
